@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "__init__", "label": "__init__", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getX", "label": "getX", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getY", "label": "getY", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "Point", "label": "Point", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "Rectangle", "label": "Rectangle", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "setFill", "label": "setFill", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "draw", "label": "draw", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "Text", "label": "Text", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "deactivate", "label": "deactivate", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "__makePip", "label": "__makePip", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setValue", "label": "setValue", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "type", "label": "type", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Toplevel", "label": "Toplevel", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "protocol", "label": "protocol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "title", "label": "title", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pack", "label": "pack", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "resizable", "label": "resizable", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bind", "label": "bind", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bind_all", "label": "bind_all", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "int", "label": "int", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "lift", "label": "lift", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "update", "label": "update", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "float", "label": "float", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "clone", "label": "clone", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "len", "label": "len", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "list", "label": "list", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "map", "label": "map", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "setText", "label": "setText", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "StringVar", "label": "StringVar", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "set", "label": "set", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "PhotoImage", "label": "PhotoImage", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "clicked", "label": "clicked", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getLabel", "label": "getLabel", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getText", "label": "getText", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "activate", "label": "activate", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setWidth", "label": "setWidth", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "Circle", "label": "Circle", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "setOutline", "label": "setOutline", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "time", "label": "time", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "sleep", "label": "sleep", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "__repr__", "label": "__repr__", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "isClosed", "label": "isClosed", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "format", "label": "format", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "getWidth", "label": "getWidth", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getHeight", "label": "getHeight", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "str", "label": "str", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "getCenter", "label": "getCenter", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "tuple", "label": "tuple", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "__str__", "label": "__str__", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "repr", "label": "repr", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "__checkOpen", "label": "__checkOpen", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "GraphicsError", "label": "GraphicsError", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "setBackground", "label": "setBackground", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "config", "label": "config", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "__autoflush", "label": "__autoflush", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setCoords", "label": "setCoords", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "Transform", "label": "Transform", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "redraw", "label": "redraw", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "close", "label": "close", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "destroy", "label": "destroy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "plot", "label": "plot", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "toScreen", "label": "toScreen", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "create_line", "label": "create_line", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "plotPixel", "label": "plotPixel", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "flush", "label": "flush", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "update_idletasks", "label": "update_idletasks", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "getMouse", "label": "getMouse", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "toWorld", "label": "toWorld", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "checkMouse", "label": "checkMouse", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getKey", "label": "getKey", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "checkKey", "label": "checkKey", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "height", "label": "height", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "width", "label": "width", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "screen", "label": "screen", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "world", "label": "world", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "_onClick", "label": "_onClick", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "_mouseCallback", "label": "_mouseCallback", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "addItem", "label": "addItem", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "append", "label": "append", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "delItem", "label": "delItem", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "remove", "label": "remove", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "undraw", "label": "undraw", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "_reconfig", "label": "_reconfig", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "_draw", "label": "_draw", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "delete", "label": "delete", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "move", "label": "move", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "_move", "label": "_move", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "itemconfig", "label": "itemconfig", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "create_rectangle", "label": "create_rectangle", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "create_oval", "label": "create_oval", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "create_polygon", "label": "create_polygon", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "create_text", "label": "create_text", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Frame", "label": "Frame", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Entry", "label": "Entry", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "focus_set", "label": "focus_set", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "create_window", "label": "create_window", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "create_image", "label": "create_image", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "copy", "label": "copy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Oval", "label": "Oval", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "Line", "label": "Line", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "Polygon", "label": "Polygon", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "get", "label": "get", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Image", "label": "Image", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "getP1", "label": "getP1", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getP2", "label": "getP2", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setArrow", "label": "setArrow", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getPoints", "label": "getPoints", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getAnchor", "label": "getAnchor", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setFace", "label": "setFace", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "_setFontComponent", "label": "_setFontComponent", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setSize", "label": "setSize", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setStyle", "label": "setStyle", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setTextColor", "label": "setTextColor", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "getPixel", "label": "getPixel", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "split", "label": "split", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "setPixel", "label": "setPixel", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "put", "label": "put", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "save", "label": "save", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "write", "label": "write", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "test", "label": "test", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "GraphWin", "label": "GraphWin", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "roll", "label": "roll", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "randrange", "label": "randrange", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "main", "label": "main", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "DieView", "label": "DieView", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "Button", "label": "Button", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "_onKey", "label": "_onKey", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "isOpen", "label": "isOpen", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "setMouseHandler", "label": "setMouseHandler", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "GraphicsObject", "label": "GraphicsObject", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "_BBox", "label": "_BBox", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "getRadius", "label": "getRadius", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "color_rgb", "label": "color_rgb", "shape": "dot", "size": 10, "title": "function"}, {"color": "#97c2fc", "id": "MSDie", "label": "MSDie", "shape": "dot", "size": 10, "title": "class"}, {"color": "#97c2fc", "id": "getValue", "label": "getValue", "shape": "dot", "size": 10, "title": "function"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "__init__", "to": "getX", "width": 1}, {"arrows": "to", "from": "__init__", "to": "getY", "width": 1}, {"arrows": "to", "from": "__init__", "to": "Point", "width": 1}, {"arrows": "to", "from": "__init__", "to": "Rectangle", "width": 1}, {"arrows": "to", "from": "__init__", "to": "setFill", "width": 1}, {"arrows": "to", "from": "__init__", "to": "draw", "width": 1}, {"arrows": "to", "from": "__init__", "to": "Text", "width": 1}, {"arrows": "to", "from": "__init__", "to": "deactivate", "width": 1}, {"arrows": "to", "from": "__init__", "to": "__makePip", "width": 1}, {"arrows": "to", "from": "__init__", "to": "setValue", "width": 1}, {"arrows": "to", "from": "__init__", "to": "type", "width": 1}, {"arrows": "to", "from": "__init__", "to": "Toplevel", "width": 1}, {"arrows": "to", "from": "__init__", "to": "protocol", "width": 1}, {"arrows": "to", "from": "__init__", "to": "__init__", "width": 1}, {"arrows": "to", "from": "__init__", "to": "title", "width": 1}, {"arrows": "to", "from": "__init__", "to": "pack", "width": 1}, {"arrows": "to", "from": "__init__", "to": "resizable", "width": 1}, {"arrows": "to", "from": "__init__", "to": "bind", "width": 1}, {"arrows": "to", "from": "__init__", "to": "bind_all", "width": 1}, {"arrows": "to", "from": "__init__", "to": "int", "width": 1}, {"arrows": "to", "from": "__init__", "to": "lift", "width": 1}, {"arrows": "to", "from": "__init__", "to": "update", "width": 1}, {"arrows": "to", "from": "__init__", "to": "float", "width": 1}, {"arrows": "to", "from": "__init__", "to": "clone", "width": 1}, {"arrows": "to", "from": "__init__", "to": "len", "width": 1}, {"arrows": "to", "from": "__init__", "to": "list", "width": 1}, {"arrows": "to", "from": "__init__", "to": "map", "width": 1}, {"arrows": "to", "from": "__init__", "to": "setText", "width": 1}, {"arrows": "to", "from": "__init__", "to": "StringVar", "width": 1}, {"arrows": "to", "from": "__init__", "to": "set", "width": 1}, {"arrows": "to", "from": "__init__", "to": "PhotoImage", "width": 1}, {"arrows": "to", "from": "clicked", "to": "getX", "width": 1}, {"arrows": "to", "from": "clicked", "to": "getY", "width": 1}, {"arrows": "to", "from": "getLabel", "to": "getText", "width": 1}, {"arrows": "to", "from": "activate", "to": "setFill", "width": 1}, {"arrows": "to", "from": "activate", "to": "setWidth", "width": 1}, {"arrows": "to", "from": "deactivate", "to": "setFill", "width": 1}, {"arrows": "to", "from": "deactivate", "to": "setWidth", "width": 1}, {"arrows": "to", "from": "__makePip", "to": "Circle", "width": 1}, {"arrows": "to", "from": "__makePip", "to": "Point", "width": 1}, {"arrows": "to", "from": "__makePip", "to": "setFill", "width": 1}, {"arrows": "to", "from": "__makePip", "to": "setOutline", "width": 1}, {"arrows": "to", "from": "__makePip", "to": "draw", "width": 1}, {"arrows": "to", "from": "setValue", "to": "setFill", "width": 1}, {"arrows": "to", "from": "update", "to": "time", "width": 1}, {"arrows": "to", "from": "update", "to": "sleep", "width": 1}, {"arrows": "to", "from": "update", "to": "update", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "format", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "title", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "getWidth", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "getHeight", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "str", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "getCenter", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "tuple", "width": 1}, {"arrows": "to", "from": "__repr__", "to": "getText", "width": 1}, {"arrows": "to", "from": "__str__", "to": "repr", "width": 1}, {"arrows": "to", "from": "__checkOpen", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "setBackground", "to": "__checkOpen", "width": 1}, {"arrows": "to", "from": "setBackground", "to": "config", "width": 1}, {"arrows": "to", "from": "setBackground", "to": "__autoflush", "width": 1}, {"arrows": "to", "from": "setCoords", "to": "Transform", "width": 1}, {"arrows": "to", "from": "setCoords", "to": "redraw", "width": 1}, {"arrows": "to", "from": "close", "to": "destroy", "width": 1}, {"arrows": "to", "from": "close", "to": "__autoflush", "width": 1}, {"arrows": "to", "from": "__autoflush", "to": "update", "width": 1}, {"arrows": "to", "from": "plot", "to": "__checkOpen", "width": 1}, {"arrows": "to", "from": "plot", "to": "toScreen", "width": 1}, {"arrows": "to", "from": "plot", "to": "create_line", "width": 1}, {"arrows": "to", "from": "plot", "to": "__autoflush", "width": 1}, {"arrows": "to", "from": "plotPixel", "to": "__checkOpen", "width": 1}, {"arrows": "to", "from": "plotPixel", "to": "create_line", "width": 1}, {"arrows": "to", "from": "plotPixel", "to": "__autoflush", "width": 1}, {"arrows": "to", "from": "flush", "to": "__checkOpen", "width": 1}, {"arrows": "to", "from": "flush", "to": "update_idletasks", "width": 1}, {"arrows": "to", "from": "getMouse", "to": "update", "width": 1}, {"arrows": "to", "from": "getMouse", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "getMouse", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "getMouse", "to": "sleep", "width": 1}, {"arrows": "to", "from": "getMouse", "to": "toWorld", "width": 1}, {"arrows": "to", "from": "getMouse", "to": "Point", "width": 1}, {"arrows": "to", "from": "checkMouse", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "checkMouse", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "checkMouse", "to": "update", "width": 1}, {"arrows": "to", "from": "checkMouse", "to": "toWorld", "width": 1}, {"arrows": "to", "from": "checkMouse", "to": "Point", "width": 1}, {"arrows": "to", "from": "getKey", "to": "update", "width": 1}, {"arrows": "to", "from": "getKey", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "getKey", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "getKey", "to": "sleep", "width": 1}, {"arrows": "to", "from": "checkKey", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "checkKey", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "checkKey", "to": "update", "width": 1}, {"arrows": "to", "from": "getHeight", "to": "height", "width": 1}, {"arrows": "to", "from": "getWidth", "to": "width", "width": 1}, {"arrows": "to", "from": "toScreen", "to": "screen", "width": 1}, {"arrows": "to", "from": "toWorld", "to": "world", "width": 1}, {"arrows": "to", "from": "_onClick", "to": "_mouseCallback", "width": 1}, {"arrows": "to", "from": "_onClick", "to": "Point", "width": 1}, {"arrows": "to", "from": "addItem", "to": "append", "width": 1}, {"arrows": "to", "from": "delItem", "to": "remove", "width": 1}, {"arrows": "to", "from": "redraw", "to": "undraw", "width": 1}, {"arrows": "to", "from": "redraw", "to": "draw", "width": 1}, {"arrows": "to", "from": "redraw", "to": "update", "width": 1}, {"arrows": "to", "from": "screen", "to": "int", "width": 1}, {"arrows": "to", "from": "setFill", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "setFill", "to": "config", "width": 1}, {"arrows": "to", "from": "setOutline", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "setWidth", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "draw", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "draw", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "draw", "to": "_draw", "width": 1}, {"arrows": "to", "from": "draw", "to": "addItem", "width": 1}, {"arrows": "to", "from": "draw", "to": "update", "width": 1}, {"arrows": "to", "from": "undraw", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "undraw", "to": "delete", "width": 1}, {"arrows": "to", "from": "undraw", "to": "delItem", "width": 1}, {"arrows": "to", "from": "undraw", "to": "update", "width": 1}, {"arrows": "to", "from": "undraw", "to": "undraw", "width": 1}, {"arrows": "to", "from": "move", "to": "_move", "width": 1}, {"arrows": "to", "from": "move", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "move", "to": "move", "width": 1}, {"arrows": "to", "from": "move", "to": "update", "width": 1}, {"arrows": "to", "from": "_reconfig", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "_reconfig", "to": "isClosed", "width": 1}, {"arrows": "to", "from": "_reconfig", "to": "itemconfig", "width": 1}, {"arrows": "to", "from": "_reconfig", "to": "update", "width": 1}, {"arrows": "to", "from": "_draw", "to": "toScreen", "width": 1}, {"arrows": "to", "from": "_draw", "to": "create_rectangle", "width": 1}, {"arrows": "to", "from": "_draw", "to": "create_oval", "width": 1}, {"arrows": "to", "from": "_draw", "to": "create_line", "width": 1}, {"arrows": "to", "from": "_draw", "to": "append", "width": 1}, {"arrows": "to", "from": "_draw", "to": "create_polygon", "width": 1}, {"arrows": "to", "from": "_draw", "to": "create_text", "width": 1}, {"arrows": "to", "from": "_draw", "to": "Frame", "width": 1}, {"arrows": "to", "from": "_draw", "to": "Entry", "width": 1}, {"arrows": "to", "from": "_draw", "to": "pack", "width": 1}, {"arrows": "to", "from": "_draw", "to": "focus_set", "width": 1}, {"arrows": "to", "from": "_draw", "to": "create_window", "width": 1}, {"arrows": "to", "from": "_draw", "to": "create_image", "width": 1}, {"arrows": "to", "from": "_move", "to": "move", "width": 1}, {"arrows": "to", "from": "clone", "to": "Point", "width": 1}, {"arrows": "to", "from": "clone", "to": "copy", "width": 1}, {"arrows": "to", "from": "clone", "to": "Rectangle", "width": 1}, {"arrows": "to", "from": "clone", "to": "Oval", "width": 1}, {"arrows": "to", "from": "clone", "to": "Circle", "width": 1}, {"arrows": "to", "from": "clone", "to": "getCenter", "width": 1}, {"arrows": "to", "from": "clone", "to": "Line", "width": 1}, {"arrows": "to", "from": "clone", "to": "Polygon", "width": 1}, {"arrows": "to", "from": "clone", "to": "Text", "width": 1}, {"arrows": "to", "from": "clone", "to": "Entry", "width": 1}, {"arrows": "to", "from": "clone", "to": "StringVar", "width": 1}, {"arrows": "to", "from": "clone", "to": "set", "width": 1}, {"arrows": "to", "from": "clone", "to": "get", "width": 1}, {"arrows": "to", "from": "clone", "to": "Image", "width": 1}, {"arrows": "to", "from": "clone", "to": "clone", "width": 1}, {"arrows": "to", "from": "getP1", "to": "clone", "width": 1}, {"arrows": "to", "from": "getP2", "to": "clone", "width": 1}, {"arrows": "to", "from": "getCenter", "to": "Point", "width": 1}, {"arrows": "to", "from": "setArrow", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "setArrow", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "getPoints", "to": "list", "width": 1}, {"arrows": "to", "from": "getPoints", "to": "map", "width": 1}, {"arrows": "to", "from": "setText", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "setText", "to": "set", "width": 1}, {"arrows": "to", "from": "getText", "to": "get", "width": 1}, {"arrows": "to", "from": "getAnchor", "to": "clone", "width": 1}, {"arrows": "to", "from": "setFace", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "setFace", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "setFace", "to": "_setFontComponent", "width": 1}, {"arrows": "to", "from": "setSize", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "setSize", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "setSize", "to": "_setFontComponent", "width": 1}, {"arrows": "to", "from": "setStyle", "to": "_reconfig", "width": 1}, {"arrows": "to", "from": "setStyle", "to": "GraphicsError", "width": 1}, {"arrows": "to", "from": "setStyle", "to": "_setFontComponent", "width": 1}, {"arrows": "to", "from": "setTextColor", "to": "setFill", "width": 1}, {"arrows": "to", "from": "setTextColor", "to": "config", "width": 1}, {"arrows": "to", "from": "_setFontComponent", "to": "list", "width": 1}, {"arrows": "to", "from": "_setFontComponent", "to": "tuple", "width": 1}, {"arrows": "to", "from": "_setFontComponent", "to": "config", "width": 1}, {"arrows": "to", "from": "getPixel", "to": "get", "width": 1}, {"arrows": "to", "from": "getPixel", "to": "type", "width": 1}, {"arrows": "to", "from": "getPixel", "to": "list", "width": 1}, {"arrows": "to", "from": "getPixel", "to": "map", "width": 1}, {"arrows": "to", "from": "getPixel", "to": "split", "width": 1}, {"arrows": "to", "from": "setPixel", "to": "put", "width": 1}, {"arrows": "to", "from": "save", "to": "split", "width": 1}, {"arrows": "to", "from": "save", "to": "write", "width": 1}, {"arrows": "to", "from": "test", "to": "GraphWin", "width": 1}, {"arrows": "to", "from": "test", "to": "setCoords", "width": 1}, {"arrows": "to", "from": "test", "to": "Text", "width": 1}, {"arrows": "to", "from": "test", "to": "Point", "width": 1}, {"arrows": "to", "from": "test", "to": "draw", "width": 1}, {"arrows": "to", "from": "test", "to": "Polygon", "width": 1}, {"arrows": "to", "from": "test", "to": "Entry", "width": 1}, {"arrows": "to", "from": "test", "to": "getMouse", "width": 1}, {"arrows": "to", "from": "test", "to": "setFill", "width": 1}, {"arrows": "to", "from": "test", "to": "setOutline", "width": 1}, {"arrows": "to", "from": "test", "to": "setWidth", "width": 1}, {"arrows": "to", "from": "test", "to": "getPoints", "width": 1}, {"arrows": "to", "from": "test", "to": "getX", "width": 1}, {"arrows": "to", "from": "test", "to": "getY", "width": 1}, {"arrows": "to", "from": "test", "to": "setText", "width": 1}, {"arrows": "to", "from": "test", "to": "getText", "width": 1}, {"arrows": "to", "from": "test", "to": "move", "width": 1}, {"arrows": "to", "from": "test", "to": "undraw", "width": 1}, {"arrows": "to", "from": "test", "to": "setStyle", "width": 1}, {"arrows": "to", "from": "test", "to": "setSize", "width": 1}, {"arrows": "to", "from": "test", "to": "setFace", "width": 1}, {"arrows": "to", "from": "test", "to": "close", "width": 1}, {"arrows": "to", "from": "roll", "to": "randrange", "width": 1}, {"arrows": "to", "from": "main", "to": "GraphWin", "width": 1}, {"arrows": "to", "from": "main", "to": "setCoords", "width": 1}, {"arrows": "to", "from": "main", "to": "setBackground", "width": 1}, {"arrows": "to", "from": "main", "to": "DieView", "width": 1}, {"arrows": "to", "from": "main", "to": "Point", "width": 1}, {"arrows": "to", "from": "main", "to": "Button", "width": 1}, {"arrows": "to", "from": "main", "to": "activate", "width": 1}, {"arrows": "to", "from": "main", "to": "getMouse", "width": 1}, {"arrows": "to", "from": "main", "to": "clicked", "width": 1}, {"arrows": "to", "from": "main", "to": "randrange", "width": 1}, {"arrows": "to", "from": "main", "to": "setValue", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
