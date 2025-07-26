@@ -22,6 +22,10 @@ CodeLens helps you understand complex Python projects at a glance. Simply upload
 Experience CodeLens in action: [Try the Live Demo](https://your-streamlit-link.streamlit.app)
 
 ![CodeLens Demo](demo/demo.gif)
+## 🎥 Demo
+
+[Click here to watch the demo video](./gif.gif)
+
 
 ## 🛠️ Technology Stack
 
